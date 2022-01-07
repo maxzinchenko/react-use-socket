@@ -12,6 +12,10 @@ export enum WebSocketState {
   CLOSED
 }
 
+export enum WebSocketClosingCode {
+  FORCE_CLOSE = 1001
+}
+
 export type SignalIndicator = string | number;
 type ResMeta = {
   error: string | null,

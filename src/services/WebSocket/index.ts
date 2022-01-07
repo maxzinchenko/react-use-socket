@@ -1,4 +1,19 @@
-import { CloseCallback, LogType, OpenCallback, Options, ShouldReconnect, SignalIndicator, SignalListener, SignalListeners, WebSocketEvent, WebSocketState } from './typedef';
+import {
+  CloseCallback,
+  LogType,
+  OpenCallback,
+  Options,
+  ShouldReconnect,
+  SignalIndicator,
+  SignalListener,
+  SignalListeners,
+  WebSocketClosingCode,
+  WebSocketEvent,
+  WebSocketState
+} from './typedef';
+
+
+const RECONNECTION_INTERVAL = 1000;
 
 
 export class WebSocketService<Req, Res, SReq extends Req = Req, DRes extends Res = Res> {
@@ -14,11 +29,11 @@ export class WebSocketService<Req, Res, SReq extends Req = Req, DRes extends Res
   #signalListeners: SignalListeners<DRes> | null = null;
 
   constructor(options: Options<Req, Res, SReq, DRes>, openCallback?: OpenCallback, closeCallback?: CloseCallback) {
-    const { shouldReconnect, reconnectionInterval, ...restOptions } = options
+    const { shouldReconnect, reconnectionInterval, ...restOptions } = options;
 
     this.#options = restOptions;
     this.#shouldReconnect = shouldReconnect ?? true;
-    this.#reconnectionInterval = reconnectionInterval ?? 1000;
+    this.#reconnectionInterval = reconnectionInterval ?? RECONNECTION_INTERVAL;
 
     this.#openCallback = openCallback;
     this.#closeCallback = closeCallback;
@@ -47,7 +62,7 @@ export class WebSocketService<Req, Res, SReq extends Req = Req, DRes extends Res
     const message = this.#serializeData(data);
     this.#ws!.send(message);
 
-    this.#log(LogType.LOG, 'Sent', message)
+    this.#log(LogType.LOG, 'Sent', message);
   }
 
   close = (code?: number) => {
@@ -134,11 +149,15 @@ export class WebSocketService<Req, Res, SReq extends Req = Req, DRes extends Res
   }
 
   #handleClose = (event: CloseEvent) => {
-    this.#log(LogType.LOG, 'Closed');
-
     this.#closeCallback?.(event);
 
-    if (typeof this.#shouldReconnect === 'boolean') {
+    const { code, reason } = event;
+    const forceDisconnection = code === WebSocketClosingCode.FORCE_CLOSE;
+
+    if (forceDisconnection && typeof this.#shouldReconnect === 'boolean') {
+      this.#log(LogType.LOG, 'Disconnected', { code, reason });
+      return;
+    } else if (typeof this.#shouldReconnect === 'boolean') {
       this.#startReconnectionJob();
       return;
     }
@@ -168,8 +187,9 @@ export class WebSocketService<Req, Res, SReq extends Req = Req, DRes extends Res
   #startReconnectionJob = () => {
     const interval = this.#getReconnectionInterval();
 
-    this.#timeout = setTimeout(this.open, interval);
+    this.#log(LogType.LOG, `Disconnected. Reconnect in ${interval} milliseconds`);
 
+    this.#timeout = setTimeout(this.open, interval);
     this.#incrementReconnectionCount();
   }
 
