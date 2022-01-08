@@ -14,8 +14,8 @@ The package is build over the <a href="https://developer.mozilla.org/en-US/docs/
 
 ## Structure
 
-- [Installation](#Installation)
-- [Provider options](#Provideroptions)
+- [Installation](#installation)
+- [Provider options](#provider-options)
   - [url](#url)
   - [getRequestIndicator](#getRequestIndicator)
   - [getResponseIndicator](#getResponseIndicator)
@@ -27,15 +27,15 @@ The package is build over the <a href="https://developer.mozilla.org/en-US/docs/
   - [serialize](#serialize)
   - [deserialize](#deserialize)
   - [debug](#debug)
-- [Hooks usage](#Hooks usage)
+- [Hooks usage](#hooks-usage)
   - [useWebSocketState](#useWebSocketState)
   - [useSignal](#useSignal)
   - [useLazySignal](#useLazySignal)
   - [useSubscription](#useSubscription)
   - [useLazySubscription](#useLazySubscription)
-- [Custom Error Type](#Custom Error Type)
-- [Provider options declaration](#Provider options declaration)
-  - [Passing own types to WebSocketOptions type](#Passing own types to WebSocketOptions type)
+- [Custom Error Type](#custom-error-type)
+- [Provider options declaration](#provider-options-declaration)
+  - [Passing own types to WebSocketOptions type](#passing-own-types-to-websocketoptions-type)
 
 
 ---
@@ -187,7 +187,7 @@ getError: res => res[Object.keys(req)[0]].error || null
 `boolean` - (`true` by default)
 
 When `true` you don't need to send anything to connect it.<br>
-When `false` you need to connect the socket manually by using `useWebSocketState`.
+When `false` you need to connect the socket manually by using `useWebSocketState` hook.
 
 ```ts
 autoConnect: true
