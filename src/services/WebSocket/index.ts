@@ -1,23 +1,11 @@
-import {
-  CloseCallback,
-  LogType,
-  OpenCallback,
-  Options,
-  ShouldReconnect,
-  SignalIndicator,
-  SignalListener,
-  SignalListeners,
-  WebSocketClosingCode,
-  WebSocketEvent,
-  WebSocketState
-} from './typedef';
+import { CloseCallback, LogType, OpenCallback, Options, ShouldReconnect, SignalIndicator, SignalListener, SignalListeners, WebSocketClosingCode, WebSocketEvent, WebSocketState } from './typedef';
 
 
 const RECONNECTION_INTERVAL = 1000;
 
 
-export class WebSocketService<Req, Res, SReq extends Req = Req, DRes extends Res = Res> {
-  readonly #options: Omit<Options<Req, Res, SReq, DRes>, 'shouldReconnect' | 'reconnectionInterval'>;
+export class WebSocketService<Req, Res, Err, SReq = Req, DRes = Res> {
+  readonly #options: Omit<Options<Req, Res, Err, SReq, DRes>, 'shouldReconnect' | 'reconnectionInterval'>;
   readonly #shouldReconnect: ShouldReconnect | boolean ;
   readonly #reconnectionInterval: number | number[];
   readonly #openCallback?: OpenCallback;
@@ -26,9 +14,9 @@ export class WebSocketService<Req, Res, SReq extends Req = Req, DRes extends Res
   #ws: WebSocket | null = null;
   #reconnections = 0;
   #timeout: NodeJS.Timeout | null = null;
-  #signalListeners: SignalListeners<DRes> | null = null;
+  #signalListeners: SignalListeners<DRes, Err> | null = null;
 
-  constructor(options: Options<Req, Res, SReq, DRes>, openCallback?: OpenCallback, closeCallback?: CloseCallback) {
+  constructor(options: Options<Req, Res, Err, SReq, DRes>, openCallback?: OpenCallback, closeCallback?: CloseCallback) {
     const { shouldReconnect, reconnectionInterval, ...restOptions } = options;
 
     this.#options = restOptions;
@@ -78,7 +66,7 @@ export class WebSocketService<Req, Res, SReq extends Req = Req, DRes extends Res
    * Signal Listeners Managers
    */
 
-  addSignalListener = (indicator: SignalIndicator, listener: SignalListener<DRes>) => {
+  addSignalListener = (indicator: SignalIndicator, listener: SignalListener<DRes, Err>) => {
     const id = this.#generateRandomString();
 
     const listeners = this.#signalListeners?.[indicator] || [];
@@ -132,13 +120,15 @@ export class WebSocketService<Req, Res, SReq extends Req = Req, DRes extends Res
   }
 
   #handleMessage = (event: MessageEvent) => {
-    const data = this.#deserializeData(event.data);
+    const parsedData = JSON.parse(event.data);
+    const data = this.#deserializeData(parsedData);
 
-    const meta = this.#options.getResponseSignalMeta(data);
-    const listeners = this.#signalListeners?.[meta.signalIndicator];
+    const signal = this.#options.getResponseIndicator(parsedData);
+    const error = this.#options.getError(parsedData);
+    const listeners = this.#signalListeners?.[signal];
 
     listeners?.forEach(({ listener }) => {
-      listener(meta.error, data);
+      listener(error, data);
     });
 
     this.#log(LogType.LOG, !listeners?.length ? 'Ignored (no listener)' : 'Received', data);
@@ -213,8 +203,8 @@ export class WebSocketService<Req, Res, SReq extends Req = Req, DRes extends Res
     return typeof serializedData === 'string' ? serializedData : JSON.stringify(data);
   }
 
-  #deserializeData = (data: string) => {
-    const deserializedData = this.#options.deserialize?.(JSON.parse(data)) || data;
+  #deserializeData = (data: Res) => {
+    const deserializedData = this.#options.deserialize?.(data) || data;
 
     return typeof deserializedData === 'string' ? JSON.parse(deserializedData) : deserializedData;
   }
@@ -239,11 +229,15 @@ export class WebSocketService<Req, Res, SReq extends Req = Req, DRes extends Res
     const info = typeof rawInfo === 'string' ? JSON.parse(rawInfo) : rawInfo;
 
     if (type === LogType.LOG) {
-      console.groupCollapsed('[awesome-websocket]', title);
+      // eslint-disable-next-line no-console
+      console.groupCollapsed('[awesome-socket]', title);
+      // eslint-disable-next-line no-console
       console.log(...(info ? [info] : []));
+      // eslint-disable-next-line no-console
       console.groupEnd();
     } else {
-      console[type](`[awesome-websocket] ${title}`, '\n', ...(info ? [info] : []));
+      // eslint-disable-next-line no-console
+      console[type](`[awesome-socket] ${title}`, '\n', ...(info ? [info] : []));
     }
   }
 

@@ -1,6 +1,6 @@
 {
-  "name": "react-awesome-websocket",
-  "version": "1.0.0",
+  "name": "react-awesome-socket",
+  "version": "0.0.1",
   "description": "This package makes web socket management much easier",
   "author": {
     "name": "Max Zinchenko",
@@ -23,8 +23,8 @@
     "ws",
     "wss"
   ],
-  "main": "dist/react-awesome-websocket.production.min.js",
-  "unpkg": "dist/react-awesome-websocket.development.js",
+  "main": "dist/react-awesome-socket.production.min.js",
+  "unpkg": "dist/react-awesome-socket.development.js",
   "types": "typedef/index.d.ts",
   "module": "es/index.js",
   "files": [

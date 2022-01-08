@@ -1,7 +1,7 @@
-export type State<Res> = {
+export type State<Res, Err> = {
   mounted: boolean,
   loading: boolean,
-  error: string | null,
+  error: Err | null,
   data: Res | null
 };
 

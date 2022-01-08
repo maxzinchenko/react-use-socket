@@ -1,6 +1,6 @@
-export type State<Res> = {
+export type State<Res, Err> = {
   data: Res | null,
-  error: string | null
+  error: Err | null
 }
 
 export type Controls = {

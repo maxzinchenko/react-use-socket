@@ -13,7 +13,7 @@ const input = 'src/index.ts';
 const external = ['react'];
 
 const output = {
-  name: 'ReactAwesomeWebsocket',
+  name: 'ReactAwesomeSocket',
   format: 'umd',
   sourcemap: true
 };
@@ -30,7 +30,7 @@ const configDevelopment = {
   input,
   output: {
     ...output,
-    file: 'dist/react-awesome-websocket.development.js'
+    file: 'dist/react-awesome-socket.development.js'
   },
   external,
   plugins
@@ -40,7 +40,7 @@ const configProduction = {
   input,
   output: {
     ...output,
-    file: 'dist/react-awesome-websocket.production.min.js'
+    file: 'dist/react-awesome-socket.production.min.js'
   },
   external,
   plugins: [

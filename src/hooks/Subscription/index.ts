@@ -13,12 +13,13 @@ const initialState = {
 
 export const useSubscription = <
   Res,
+  Err = string,
   Signal extends SignalIndicator = SignalIndicator
->(signal: Signal): [State<Res>, Controls] => {
-  const { addSignalListener } = useWebSocketContext<unknown, Res>();
+>(signal: Signal): [State<Res, Err>, Controls] => {
+  const { addSignalListener } = useWebSocketContext<unknown, Res, Err>();
 
   const removeListener = useRef<(() => void) | null>(null);
-  const [state, setState] = useState<State<Res>>(initialState);
+  const [state, setState] = useState<State<Res, Err>>(initialState);
 
   useEffect(() => {
     removeListener.current = addSignalListener(signal, (error, response) => {
@@ -38,12 +39,13 @@ export const useSubscription = <
 
 export const useLazySubscription = <
   Res,
+  Err = string,
   Signal extends SignalIndicator = SignalIndicator
-  >(signal: Signal): [State<Res>, LazyControls] => {
-  const { addSignalListener } = useWebSocketContext<unknown, Res>();
+  >(signal: Signal): [State<Res, Err>, LazyControls] => {
+  const { addSignalListener } = useWebSocketContext<unknown, Res, Err>();
 
   const removeListener = useRef<(() => void) | null>(null);
-  const [state, setState] = useState<State<Res>>(initialState);
+  const [state, setState] = useState<State<Res, Err>>(initialState);
 
   useEffect(() => () => {
     removeListener.current?.();

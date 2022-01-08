@@ -10,8 +10,7 @@ const WebSocketContext = createContext<Context>({
   send: _ => {},
   close: () => {},
   removeSignalListener: _ => {},
-  // @ts-ignore
-  addSignalListener: (_, __) => {},
+  addSignalListener: (_, __) => () => {},
   getRequestSignalIndicator: _ => ''
 });
 
@@ -19,9 +18,10 @@ const WebSocketContext = createContext<Context>({
 export const WebSocketProvider = <
   Req,
   Res,
-  SReq extends Req = Req,
-  DRes extends Res = Res
->({ options, children }: ProviderProps<Req, Res, SReq, DRes>) => {
+  Err = string,
+  SReq = Req,
+  DRes = Res
+>({ options, children }: ProviderProps<Req, Res, Err, SReq, DRes>) => {
   const [connected, setConnected] = useState(false);
 
   const handleOpen = useCallback(() => {
@@ -33,7 +33,7 @@ export const WebSocketProvider = <
   }, []);
 
   const webSocket = useMemo(() => {
-    return new WebSocketService<Req, Res, SReq, DRes>(options, handleOpen, handleClose);
+    return new WebSocketService<Req, Res, Err, SReq, DRes>(options, handleOpen, handleClose);
   }, []);
 
   useEffect(() => {
@@ -65,8 +65,8 @@ export const WebSocketProvider = <
   );
 };
 
-export const useWebSocketContext = <Req, Res>() => {
-  const context = useContext(WebSocketContext as React.Context<Context<Req, Res>>);
+export const useWebSocketContext = <Req, Res, Err extends any = string>() => {
+  const context = useContext(WebSocketContext as React.Context<Context<Req, Res, Err>>);
 
   if (!context) throw new Error('WebSocket context not found. Make sure you use hooks inside a <WebSocketProvider>');
 

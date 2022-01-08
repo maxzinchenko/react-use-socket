@@ -17,26 +17,18 @@ export enum WebSocketClosingCode {
 }
 
 export type SignalIndicator = string | number;
-type ResMeta = {
-  error: string | null,
-  signalIndicator: SignalIndicator
-}
 
 export type ShouldReconnect = (event: CloseEvent) => boolean;
-type Serialize<Req, SReq = Req> = (req: Req) => SReq;
-type Deserialize<Res, DRes = Res> = (res: Res) => DRes;
-type GetResSignalMeta<DRes> = (res: DRes) => ResMeta;
-type CheckError<DRes> = (res: DRes) => boolean;
 
-export type Options<Req, Res, SReq extends Req = Req, DRes extends Res = Res> = {
+export type Options<Req, Res, Err = string, SReq = Req, DRes = Res> = {
   url: string,
-  getResponseSignalMeta: GetResSignalMeta<DRes>,
-  checkError: CheckError<DRes>,
+  getResponseIndicator: (res: Res) => SignalIndicator,
+  getError: (res: Res) => Err | null,
   protocols?: string | string[],
   shouldReconnect?: ShouldReconnect | boolean,
   reconnectionInterval?: number | number[],
-  serialize?: Serialize<Req, SReq>,
-  deserialize?: Deserialize<Res, DRes>,
+  serialize?: (req: Req) => SReq,
+  deserialize?: (res: Res) => DRes,
   debug?: boolean
 }
 
@@ -46,12 +38,12 @@ export enum LogType {
   WARNING = 'warn'
 }
 
-export type SignalListenerData<DRes> = {
+export type SignalListenerData<DRes, Err> = {
   id: string,
-  listener: SignalListener<DRes>
+  listener: SignalListener<DRes, Err>
 };
-export type SignalListener<DRes> = (error: string | null, response: DRes) => void;
-export type SignalListeners<DRes> = { [signal in SignalIndicator]: SignalListenerData<DRes>[] };
+export type SignalListener<DRes, Err> = (error: Err | null, response: DRes) => void;
+export type SignalListeners<DRes, Err> = { [signal in SignalIndicator]: SignalListenerData<DRes, Err>[] };
 
 export type OpenCallback = (event: Event) => void;
 export type CloseCallback = (event: CloseEvent) => void;
