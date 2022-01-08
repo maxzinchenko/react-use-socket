@@ -1,4 +1,4 @@
-# React Awesome Web Socket
+# React Awesome Socket
 
 The package which makes web socket management much easier.<br>
 The package is build over the <a href="https://developer.mozilla.org/en-US/docs/Web/API/WebSocket/WebSocket">WebSocket</a> constructor from browser API.
