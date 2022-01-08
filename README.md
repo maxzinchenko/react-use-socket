@@ -3,10 +3,10 @@
 The package which makes web socket management much easier.<br>
 The package is build over the <a href="https://developer.mozilla.org/en-US/docs/Web/API/WebSocket/WebSocket">WebSocket</a> constructor from browser API.
 
-<a href="https://npmjs.com/package/react-awesome-websocket" target="\_parent">
-  <img alt="npm version" src="https://img.shields.io/npm/v/react-awesome-websocket.svg" />
-</a><a href="https://npmjs.com/package/react-awesome-websocket" target="\_parent">
-  <img alt="npm downloads" src="https://img.shields.io/npm/dm/react-awesome-websocket.svg" />
+<a href="https://npmjs.com/package/react-awesome-socket" target="\_parent">
+  <img alt="npm version" src="https://img.shields.io/npm/v/react-awesome-socket.svg" />
+</a><a href="https://npmjs.com/package/react-awesome-socket" target="\_parent">
+  <img alt="npm downloads" src="https://img.shields.io/npm/dm/react-awesome-socket.svg" />
 </a>
 
 
@@ -15,7 +15,7 @@ The package is build over the <a href="https://developer.mozilla.org/en-US/docs/
 ## Structure
 
 - [Installation](#Installation)
-- [Provider options](#Provider options)
+- [Provider options](#Provideroptions)
   - [url](#url)
   - [getRequestIndicator](#getRequestIndicator)
   - [getResponseIndicator](#getResponseIndicator)
@@ -33,6 +33,7 @@ The package is build over the <a href="https://developer.mozilla.org/en-US/docs/
   - [useLazySignal](#useLazySignal)
   - [useSubscription](#useSubscription)
   - [useLazySubscription](#useLazySubscription)
+- [Custom Error Type](#Custom Error Type)
 - [Provider options declaration](#Provider options declaration)
   - [Passing own types to WebSocketOptions type](#Passing own types to WebSocketOptions type)
 
