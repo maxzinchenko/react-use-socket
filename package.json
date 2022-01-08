@@ -1,7 +1,7 @@
 {
   "name": "react-awesome-socket",
   "version": "0.0.1",
-  "description": "This package makes web socket management much easier",
+  "description": "The package which makes web socket management much easier",
   "author": {
     "name": "Max Zinchenko",
     "email": "mx.zinchenko@gmail.com",
@@ -10,7 +10,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/maxzinchenko/react-awesome-websocket"
+    "url": "https://github.com/maxzinchenko/react-awesome-socket"
   },
   "keywords": [
     "websocket",
