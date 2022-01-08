@@ -32,18 +32,15 @@ export type Options<Req, Res, Err = string, SReq = Req, DRes = Res> = {
   debug?: boolean
 }
 
-export enum LogType {
-  LOG = 'log',
-  ERROR = 'error',
-  WARNING = 'warn'
-}
+type Short = 'shouldReconnect' | 'reconnectionInterval' | 'deserialize' | 'serialize' | 'debug';
 
-export type SignalListenerData<DRes, Err> = {
-  id: string,
-  listener: SignalListener<DRes, Err>
-};
-export type SignalListener<DRes, Err> = (error: Err | null, response: DRes) => void;
-export type SignalListeners<DRes, Err> = { [signal in SignalIndicator]: SignalListenerData<DRes, Err>[] };
+export type OptionsShort<
+  Req,
+  Res,
+  Err = string,
+  SReq = Req,
+  DRes = Res
+> = Omit<Options<Req, Res, Err, SReq, DRes>, Short>
 
 export type OpenCallback = (event: Event) => void;
 export type CloseCallback = (event: CloseEvent) => void;
