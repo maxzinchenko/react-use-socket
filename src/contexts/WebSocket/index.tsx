@@ -11,7 +11,7 @@ const WebSocketContext = createContext<Context>({
   close: () => {},
   removeSignalListener: _ => {},
   addSignalListener: (_, __) => () => {},
-  getRequestSignalIndicator: _ => ''
+  getRequestIndicator: _ => ''
 });
 
 
@@ -58,7 +58,7 @@ export const WebSocketProvider = <
       close,
       addSignalListener,
       removeSignalListener,
-      getRequestSignalIndicator: options.getRequestSignalIndicator
+      getRequestIndicator: options.getRequestIndicator
     }}>
       {children}
     </WebSocketContext.Provider>

@@ -4,17 +4,17 @@ import { SignalIndicator, Options } from '../../services/WebSocket/typedef';
 import { SignalListener } from '../../services/SignalListeners/typedef';
 
 
-export type WebSocketOptions<Req, Res, Err, SReq = Req, DRes = Res> = Options<Req, Res, Err, SReq, DRes> & {
-  getRequestSignalIndicator: GetReqSignalIndicator<Req>,
+export type WebSocketOptions<Req, Res, Err = string, SReq = Req, DRes = Res> = Options<Req, Res, Err, SReq, DRes> & {
+  getRequestIndicator: GetReqIndicator<Req>,
   autoConnect?: boolean
 }
 
-export type ProviderProps<Req, Res, Err = string, SReq = Req, DRes = Res> = {
+export type ProviderProps<Req, Res, Err, SReq = Req, DRes = Res> = {
   options: WebSocketOptions<Req, Res, Err, SReq, DRes>,
   children: ReactNode | ReactNode[]
 }
 
-type GetReqSignalIndicator<Req> = (req: Req) => SignalIndicator;
+type GetReqIndicator<Req> = (req: Req) => SignalIndicator;
 
 export type Context<Req = any, DRes = any, Err = any> = {
   connected: boolean;
@@ -23,5 +23,5 @@ export type Context<Req = any, DRes = any, Err = any> = {
   close: () => void,
   addSignalListener: (signal: SignalIndicator, listener: SignalListener<DRes, Err>) => () => void,
   removeSignalListener: (signal: SignalIndicator, id: string) => void,
-  getRequestSignalIndicator: GetReqSignalIndicator<Req>
+  getRequestIndicator: GetReqIndicator<Req>
 }

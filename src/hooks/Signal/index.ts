@@ -13,7 +13,7 @@ const initialState = {
 
 
 export const useSignal = <Req, Res, Err = string>(req: Req) => {
-  const { send, addSignalListener, getRequestSignalIndicator, connected } = useWebSocketContext<Req, Res, Err>();
+  const { send, addSignalListener, getRequestIndicator, connected } = useWebSocketContext<Req, Res, Err>();
 
   const removeListener = useRef<(() => void) | null>(null);
   const [state, setState] = useState<State<Res, Err>>(initialState);
@@ -29,7 +29,7 @@ export const useSignal = <Req, Res, Err = string>(req: Req) => {
   useEffect(sendRequest, [connected]);
 
   useEffect(() => {
-    const signal = getRequestSignalIndicator(req);
+    const signal = getRequestIndicator(req);
 
     removeListener.current = addSignalListener(signal, (error, response) => {
       setState(prevState => ({ ...prevState, error, loading: false, data: response }));
@@ -43,14 +43,14 @@ export const useSignal = <Req, Res, Err = string>(req: Req) => {
 
 
 export const useLazySignal = <Req, Res, Err = string>(): [State<Res, Err>, Controls<Req>] => {
-  const { send, addSignalListener, getRequestSignalIndicator } = useWebSocketContext<Req, Res, Err>();
+  const { send, addSignalListener, getRequestIndicator } = useWebSocketContext<Req, Res, Err>();
 
   const signalIndicator = useRef<string | number | null>(null);
   const removeListener = useRef<(() => void) | null>(null);
   const [state, setState] = useState<State<Res, Err>>(initialState);
 
   const sendRequest = useCallback((req: Req) => {
-    signalIndicator.current = getRequestSignalIndicator(req);
+    signalIndicator.current = getRequestIndicator(req);
 
     setState(prevState => ({
       ...prevState,

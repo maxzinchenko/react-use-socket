@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.0.5
+
+- Fixed `WebSocketOptions` type.
+
 ## 0.0.4
 
 - Fixed types location.
