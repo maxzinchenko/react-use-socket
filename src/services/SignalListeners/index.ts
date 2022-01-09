@@ -28,9 +28,10 @@ export class SignalListenersService<Res, Err> {
   }
 
   remove = (indicator: SignalIndicator, id: string) => {
+
     if (!this.#listeners.length) return;
 
-    this.#listeners = this.#listeners.filter(listener => listener.indicator === indicator && listener.id === id);
+    this.#listeners = this.#listeners.filter(listener => !(listener.indicator === indicator && listener.id === id));
 
     this.#loggerService?.log(`Removed listener for "${indicator}"`, { id });
   }

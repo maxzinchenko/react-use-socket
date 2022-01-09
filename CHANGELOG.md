@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.0.11
+
+- Fixed `send` function of the `useLazySignal`.
+- Fixed `remove` function of the `SignalListenres`.
+
+## 0.0.9
+
+- Fixed `close` of from the `useWebSocketState` hook.
+
 ## 0.0.8
 
 - Fixed `useWebSocketState` type.

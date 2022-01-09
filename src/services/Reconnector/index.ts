@@ -22,7 +22,7 @@ export class ReconnectorService {
   startJob = () => {
     const interval = this.#getInterval();
 
-    this.#loggerService?.log('Disconnected. Reconnect in ${interval} milliseconds');
+    this.#loggerService?.log(`Disconnected. Reconnect in ${interval} milliseconds`);
 
     this.#timeout = setTimeout(this.#callback, interval);
     this.#incrementReconnections();

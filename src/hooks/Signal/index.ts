@@ -73,7 +73,7 @@ export const useLazySignal = <Req, Res, Err = string>(): [State<Res, Err>, Contr
         error
       }));
     });
-  }, []);
+  }, [signalIndicator.current]);
 
   useEffect(() => () => {
     removeListener.current?.();

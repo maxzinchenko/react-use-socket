@@ -57,14 +57,13 @@ export class WebSocketService<Req, Res, Err, SReq = Req, DRes = Res> {
     const message = this.#serializerService.serialize(data);
     this.#ws!.send(message);
 
-    this.#loggerService?.log('Sent', message);
+    this.#loggerService?.log('Sent', JSON.parse(message));
   }
 
   close = (code?: number) => {
     this.#checkOpenStateAndThrowError();
 
     this.#ws!.close(code);
-    this.#removeListeners();
 
     this.#ws = null;
   }
@@ -111,12 +110,20 @@ export class WebSocketService<Req, Res, Err, SReq = Req, DRes = Res> {
     this.#loggerService?.log('Connected');
 
     this.#openCallback?.(event);
+
     this.#reconnectorService.removeJob();
   }
 
   #handleMessage = (event: MessageEvent) => {
-    const parsedData = JSON.parse(event.data);
-    const data = this.#serializerService.deserialize(event.data);
+    let parsedData;
+
+    try {
+      parsedData = JSON.parse(event.data);
+    } catch {
+      parsedData = event.data;
+    }
+
+    const data = this.#serializerService.deserialize(parsedData);
 
     const indicator = this.#options.getResponseIndicator(parsedData);
     const error = this.#options.getError(parsedData);
@@ -130,6 +137,7 @@ export class WebSocketService<Req, Res, Err, SReq = Req, DRes = Res> {
 
   #handleClose = (event: CloseEvent) => {
     this.#closeCallback?.(event);
+    this.#removeListeners();
 
     const { code, reason } = event;
     const forceDisconnection = code === WebSocketClosingCode.FORCE_CLOSE;
