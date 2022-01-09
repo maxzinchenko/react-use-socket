@@ -1,4 +1,4 @@
-export const PREFIX = 'awesome-socket';
+export const PREFIX = 'use-socket';
 
 
 export class LoggerService {

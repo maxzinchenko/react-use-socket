@@ -30,7 +30,7 @@ const configDevelopment = {
   input,
   output: {
     ...output,
-    file: 'dist/react-awesome-socket.development.js'
+    file: 'dist/react-use-socket.development.js'
   },
   external,
   plugins
@@ -40,7 +40,7 @@ const configProduction = {
   input,
   output: {
     ...output,
-    file: 'dist/react-awesome-socket.production.min.js'
+    file: 'dist/react-use-socket.production.min.js'
   },
   external,
   plugins: [

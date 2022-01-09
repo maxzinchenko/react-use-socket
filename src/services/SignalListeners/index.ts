@@ -3,6 +3,7 @@ import { SignalIndicator } from '../WebSocket/typedef';
 import { SignalListenerData, SignalListener } from './typedef';
 import { LoggerService } from '../Logger';
 
+
 export class SignalListenersService<Res, Err> {
   readonly #loggerService?: LoggerService;
   readonly #randomService: RandomService;

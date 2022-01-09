@@ -65,7 +65,7 @@ export const WebSocketProvider = <
   );
 };
 
-export const useWebSocketContext = <Req, Res, Err extends any = string>() => {
+export const useWebSocketContext = <Req, Res, Err = string>() => {
   const context = useContext(WebSocketContext as React.Context<Context<Req, Res, Err>>);
 
   if (!context) throw new Error('WebSocket context not found. Make sure you use hooks inside a <WebSocketProvider>');

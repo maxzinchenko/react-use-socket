@@ -1,5 +1,5 @@
 {
-  "name": "react-awesome-socket",
+  "name": "react-use-socket",
   "version": "0.0.1",
   "description": "The package which makes web socket management much easier",
   "author": {
@@ -10,7 +10,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/maxzinchenko/react-awesome-socket"
+    "url": "https://github.com/maxzinchenko/react-use-socket"
   },
   "keywords": [
     "websocket",
@@ -23,8 +23,8 @@
     "ws",
     "wss"
   ],
-  "main": "dist/react-awesome-socket.production.min.js",
-  "unpkg": "dist/react-awesome-socket.development.js",
+  "main": "dist/react-use-socket.production.min.js",
+  "unpkg": "dist/react-use-socket.development.js",
   "types": "typedef/index.d.ts",
   "module": "es/index.js",
   "files": [

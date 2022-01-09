@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 
-import { SignalIndicator, Options, SignalListener } from '../../services/WebSocket/typedef';
+import { SignalIndicator, Options } from '../../services/WebSocket/typedef';
+import { SignalListener } from '../../services/SignalListeners/typedef';
 
 
 export type WebSocketOptions<Req, Res, Err, SReq = Req, DRes = Res> = Options<Req, Res, Err, SReq, DRes> & {

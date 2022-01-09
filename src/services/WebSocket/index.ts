@@ -74,7 +74,7 @@ export class WebSocketService<Req, Res, Err, SReq = Req, DRes = Res> {
    */
 
   addSignalListener = (indicator: SignalIndicator, listener: SignalListener<DRes, Err>) => {
-    this.#signalListenersService.add(indicator, listener);
+    return this.#signalListenersService.add(indicator, listener);
   }
 
   removeSignalListener = (indicator: SignalIndicator, id: string) => {
