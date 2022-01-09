@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.0.3
+
+- Fixed doc
+
 ## 0.0.2
 
 - Fixed listeners
@@ -9,4 +13,3 @@
 - Added a feature for management WebSocket state `useWebSocketState`.
 - Added a feature for management WebSocket requests and responses `useSignal` and `useLazySignal`.
 - Added a feature for management WebSocket responses/subscriptions `useSuvscription` and `useLazySuvscription`.
-

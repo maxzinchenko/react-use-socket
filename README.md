@@ -1,11 +1,15 @@
 # React Use Socket
 
 The package which makes web socket management much easier by using hooks.<br>
-The package is build over the <a href="https://developer.mozilla.org/en-US/docs/Web/API/WebSocket/WebSocket">WebSocket</a> constructor from browser API.
+The package is built over the <a href="https://developer.mozilla.org/en-US/docs/Web/API/WebSocket/WebSocket">WebSocket</a> constructor from browser API.
 
-<a href="https://npmjs.com/package/react-use-socket" target="\_parent">
+<a href="https://npmjs.com/package/react-use-socket" target="\_blank">
   <img alt="npm version" src="https://img.shields.io/npm/v/react-use-socket.svg" />
-</a><a href="https://npmjs.com/package/react-use-socket" target="\_parent">
+</a>
+<a href="https://bundlephobia.com/result?p=react-use-socket@latest" target="\_blank">
+  <img alt="size" src="https://badgen.net/bundlephobia/minzip/react-use-socket@latest" />
+</a>
+<a href="https://npmjs.com/package/react-use-socket" target="\_blank">
   <img alt="npm downloads" src="https://img.shields.io/npm/dm/react-use-socket.svg" />
 </a>
 
@@ -541,6 +545,7 @@ const options: WebSocketOptions<
 ```
 
 ### Passing own types to WebSocketOptions type
+
 `WebSocketOptions` is a generic type.
 
 ```ts

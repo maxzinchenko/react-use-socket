@@ -1,6 +1,6 @@
 {
   "name": "react-use-socket",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "The package which makes web socket management much easier",
   "author": {
     "name": "Max Zinchenko",
