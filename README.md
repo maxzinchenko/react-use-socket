@@ -20,12 +20,10 @@ The package is built over the <a href="https://developer.mozilla.org/en-US/docs/
 `0.0.11` - stable release
 
 
----
-
-
 ## Structure
 
 - [Installation](#installation)
+- [Example](https://github.com/maxzinchenko/react-use-socket/blob/master/example/src/app.tsx)
 - [Provider options](#provider-options)
   - [url](#url)
   - [getRequestIndicator](#getRequestIndicator)
