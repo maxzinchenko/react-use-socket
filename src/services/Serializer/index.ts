@@ -10,15 +10,13 @@ export class SerializerService<Serialize, Deserialize, Serialized = Serialize, D
     this.#deserializer = deserializer;
   }
 
-  serialize = (data: Serialize): Serialized  | string => {
+  serialize = (data: Serialize): string => {
     const serializedData = this.#serializer?.(data) || data;
 
     return typeof serializedData === 'string' ? serializedData : JSON.stringify(data);
   }
 
-  deserialize = (data: Deserialize): Deserialized => {
-    const deserializedData = this.#deserializer?.(data) || data;
-
-    return typeof deserializedData === 'string' ? JSON.parse(deserializedData) : deserializedData;
+  deserialize = (data: Deserialize): Deserialize | Deserialized => {
+    return this.#deserializer?.(data) || data;
   }
 }

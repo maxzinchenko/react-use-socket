@@ -14,7 +14,7 @@ export class WebSocketService<Req, Res, Err, SReq = Req, DRes = Res> {
 
   readonly #loggerService?: LoggerService;
   readonly #reconnectorService: ReconnectorService;
-  readonly #signalListenersService: SignalListenersService<DRes, Err>;
+  readonly #signalListenersService: SignalListenersService<Res | DRes, Err>;
   readonly #serializerService: SerializerService<Req, Res, SReq, DRes>;
 
   #ws: WebSocket | null = null;
@@ -55,7 +55,7 @@ export class WebSocketService<Req, Res, Err, SReq = Req, DRes = Res> {
     this.#checkOpenStateAndThrowError();
 
     const message = this.#serializerService.serialize(data);
-    this.#ws!.send(message as string);
+    this.#ws!.send(message);
 
     this.#loggerService?.log('Sent', message);
   }
@@ -73,7 +73,7 @@ export class WebSocketService<Req, Res, Err, SReq = Req, DRes = Res> {
    * Signal Listeners Managers
    */
 
-  addSignalListener = (indicator: SignalIndicator, listener: SignalListener<DRes, Err>) => {
+  addSignalListener = (indicator: SignalIndicator, listener: SignalListener<Res | DRes, Err>) => {
     return this.#signalListenersService.add(indicator, listener);
   }
 
