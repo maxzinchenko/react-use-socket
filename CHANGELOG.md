@@ -1,12 +1,16 @@
 # Changelog
 
+## 0.0.4
+
+- Fixed types location.
+
 ## 0.0.3
 
-- Fixed doc
+- Fixed doc.
 
 ## 0.0.2
 
-- Fixed listeners
+- Fixed listeners.
 
 ## 0.0.1
 
