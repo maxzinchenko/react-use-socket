@@ -20,7 +20,7 @@ export type Context<Req = any, DRes = any, Err = any> = {
   connected: boolean;
   open: () => void,
   send: (data: any) => void,
-  close: () => void,
+  close: (code?: number) => void,
   addSignalListener: (signal: SignalIndicator, listener: SignalListener<DRes, Err>) => () => void,
   removeSignalListener: (signal: SignalIndicator, id: string) => void,
   getRequestIndicator: GetReqIndicator<Req>

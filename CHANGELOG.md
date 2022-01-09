@@ -1,6 +1,10 @@
 # Changelog
 
-## 0.0.5
+## 0.0.8
+
+- Fixed `useWebSocketState` type.
+
+## 0.0.7 - 0.0.5
 
 - Fixed `WebSocketOptions` type.
 

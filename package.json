@@ -1,6 +1,6 @@
 {
   "name": "react-use-socket",
-  "version": "0.0.5",
+  "version": "0.0.8",
   "description": "The package which makes web socket management much easier",
   "author": {
     "name": "Max Zinchenko",
@@ -35,7 +35,8 @@
     "build": "rimraf ./dist && cross-env NODE_ENV=production rollup -c config/rollup.config.js",
     "build:types": "rimraf ./types && tsc --project ./tsconfig.types.json",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+    "prepublish": "yarn build && yarn build:types"
   },
   "husky": {
     "hooks": {
