@@ -541,10 +541,10 @@ const options: WebSocketOptions<
 ```
 
 ### Passing own types to WebSocketOptions type
-`ProviderOptions` is a generic type.
+`WebSocketOptions` is a generic type.
 
 ```ts
-ProviderOptions<Req, Res, Err = string, SReq = Req, DRes = Res>
+WebSocketOptions<Req, Res, Err = string, SReq = Req, DRes = Res>
 ```
 
 `Req` - type of the socket request (required).
@@ -554,7 +554,7 @@ ProviderOptions<Req, Res, Err = string, SReq = Req, DRes = Res>
 `Err` (default is `string`) - type of the socket error which is reachable by using hooks as` error` (not required).
 
 `SReq` (default is `Req`) - type of serialized socket request which will be sent to the API (not required).<br>
-**This type should be returned from the ProviderOptions.serialize function.**
+**This type should be returned from the WebSocketOptions.serialize function.**
 
 `DRes` (default is `Res`) - type of deserialized socket response which is reachable by using hooks as `data` (not required).<br>
-**This type should be returned from the ProviderOptions.deserialize function.**
+**This type should be returned from the WebSocketOptions.deserialize function.**
