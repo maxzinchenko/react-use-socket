@@ -17,7 +17,7 @@ The package is built over the <a href="https://developer.mozilla.org/en-US/docs/
 ---
 
 
-`0.0.11` - stable release
+`0.0.12` - stable release
 
 
 ## Structure
@@ -206,7 +206,7 @@ autoConnect: true
 
 `((event: CloseEvent) => boolean) | boolean` - (`true` by default)
 
-When `true` the socket tries to reconnect if `closeEvent.code !== 1001`.<br>
+When `true` the socket tries to reconnect if `event.code !== 1005`.<br>
 When the predicate is passed you are able to decide if the socket needs to be reconnected.
 
 ```ts

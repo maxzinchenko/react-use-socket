@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.0.12
+
+- Fixed reconnection service.
+
 ## 0.0.11
 
 - Fixed `send` function of the `useLazySignal`.
