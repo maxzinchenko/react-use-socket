@@ -5,13 +5,6 @@ export enum WebSocketEvent {
   CLOSE = 'close'
 }
 
-export enum WebSocketState {
-  CONNECTING,
-  OPEN,
-  CLOSING,
-  CLOSED
-}
-
 export enum WebSocketClosingCode {
   FORCE_CLOSE = 1005
 }

@@ -1,4 +1,4 @@
-import { CloseCallback, OpenCallback, Options, OptionsShort, ShouldReconnect, SignalIndicator, WebSocketClosingCode, WebSocketEvent, WebSocketState } from './typedef';
+import { CloseCallback, OpenCallback, Options, OptionsShort, ShouldReconnect, SignalIndicator, WebSocketClosingCode, WebSocketEvent } from './typedef';
 import { SignalListener } from '../SignalListeners/typedef';
 import { LoggerService } from '../Logger';
 import { SerializerService } from '../Serializer';
@@ -45,7 +45,7 @@ export class WebSocketService<Req, Res, Err, SReq = Req, DRes = Res> {
   open = () => {
     const { url, protocols } = this.#options;
 
-    if (typeof window === 'undefined') return;
+    if (typeof window === 'undefined' || this.#ws) return;
 
     this.#ws = new WebSocket(url, protocols);
     this.#setListeners();
@@ -64,8 +64,6 @@ export class WebSocketService<Req, Res, Err, SReq = Req, DRes = Res> {
     this.#checkOpenStateAndThrowError();
 
     this.#ws!.close(code);
-
-    this.#ws = null;
   }
 
   /*
@@ -136,16 +134,18 @@ export class WebSocketService<Req, Res, Err, SReq = Req, DRes = Res> {
   }
 
   #handleClose = (event: CloseEvent) => {
-    this.#closeCallback?.(event);
-    this.#removeListeners();
-
     const { code, reason } = event;
     const forceDisconnection = code === WebSocketClosingCode.FORCE_CLOSE;
 
-    if (forceDisconnection && typeof this.#shouldReconnect === 'boolean') {
-      this.#loggerService?.log('Disconnected', { code, reason });
-      return;
-    } else if (typeof this.#shouldReconnect === 'boolean') {
+    this.#loggerService?.log('Disconnected', { code, forceDisconnection, reason });
+    this.#closeCallback?.(event);
+
+    this.#removeListeners();
+    this.#ws = null;
+
+    if (forceDisconnection && typeof this.#shouldReconnect === 'boolean') return;
+
+    if (typeof this.#shouldReconnect === 'boolean') {
       this.#reconnectorService.startJob();
       return;
     }
@@ -160,7 +160,7 @@ export class WebSocketService<Req, Res, Err, SReq = Req, DRes = Res> {
    */
 
   #checkOpenStateAndThrowError = () => {
-    if (this.#ws && this.#ws.readyState === WebSocketState.OPEN) return;
+    if (this.#ws?.readyState === WebSocket.OPEN) return;
 
     throw new Error('WebSocket is not connected. Make sure it is connected before triggering an action.');
   }
