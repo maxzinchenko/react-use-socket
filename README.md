@@ -18,14 +18,10 @@ The package is built over the <a href="https://developer.mozilla.org/en-US/docs/
 ---
 
 
-<<<<<<< HEAD
 `0.0.13` - stable release
 
 
 ---
-=======
-`0.0.12` - stable release
->>>>>>> 2c82ed316f2acc1ffcd5f3de6b5a8f8f58781a43
 
 
 ## Structure
