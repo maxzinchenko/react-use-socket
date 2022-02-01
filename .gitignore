@@ -2,6 +2,7 @@
 *node_modules
 
 # Production builds
+es
 dist
 types
 

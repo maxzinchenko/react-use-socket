@@ -13,7 +13,7 @@ export enum WebSocketState {
 }
 
 export enum WebSocketClosingCode {
-  FORCE_CLOSE = 1001
+  FORCE_CLOSE = 1005
 }
 
 export type SignalIndicator = string | number;

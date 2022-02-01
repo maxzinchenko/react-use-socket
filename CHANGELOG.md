@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.0.12 - 0.0.13
+
+- Added es modules.
+- Changed auto-recconect close code from 1001 to 1006. The Socket will not reconnect when receives 1006 closing code.
+
 ## 0.0.11
 
 - Fixed `send` function of the `useLazySignal`.
