@@ -1,18 +1,10 @@
-import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 
 import { Context, ProviderProps } from './typedef';
 import { WebSocketService } from '../../services/WebSocket';
 
 
-const WebSocketContext = createContext<Context>({
-  connected: false,
-  open: () => {},
-  send: _ => {},
-  close: () => {},
-  removeSignalListener: _ => {},
-  addSignalListener: (_, __) => () => {},
-  getRequestIndicator: _ => ''
-});
+const WebSocketContext = createContext<Context>({} as Context);
 
 
 export const WebSocketProvider = <
@@ -32,9 +24,7 @@ export const WebSocketProvider = <
     setConnected(false);
   }, []);
 
-  const webSocket = useMemo(() => {
-    return new WebSocketService<Req, Res, Err, SReq, DRes>(options, handleOpen, handleClose);
-  }, []);
+  const webSocket = useRef(new WebSocketService<Req, Res, Err, SReq, DRes>(options, handleOpen, handleClose)).current;
 
   useEffect(() => {
     // This "false" check is required here since the value can be "undefined".
@@ -58,7 +48,8 @@ export const WebSocketProvider = <
       close,
       addSignalListener,
       removeSignalListener,
-      getRequestIndicator: options.getRequestIndicator
+      getRequestIndicator: options.getRequestIndicator,
+      debug: options.debug
     }}>
       {children}
     </WebSocketContext.Provider>

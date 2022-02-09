@@ -1,3 +1,6 @@
+import { Options as CacheServiceOptions } from '../../services/Cache/typedef';
+
+
 export type State<Res, Err> = {
   mounted: boolean,
   loading: boolean,
@@ -6,5 +9,9 @@ export type State<Res, Err> = {
 };
 
 export type Controls<Req> = {
-  send: (req: Req) => void
-}
+  send: (req: Req) => void;
+};
+
+export type Options = Omit<CacheServiceOptions, 'debug'> & {
+  cache: boolean;
+};

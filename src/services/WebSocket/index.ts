@@ -113,18 +113,11 @@ export class WebSocketService<Req, Res, Err, SReq = Req, DRes = Res> {
   }
 
   #handleMessage = (event: MessageEvent) => {
-    let parsedData;
+    const parsedJson = SerializerService.deserializeJSON<Res>(event.data);
 
-    try {
-      parsedData = JSON.parse(event.data);
-    } catch {
-      parsedData = event.data;
-    }
-
-    const data = this.#serializerService.deserialize(parsedData);
-
-    const indicator = this.#options.getResponseIndicator(parsedData);
-    const error = this.#options.getError(parsedData);
+    const indicator = this.#options.getResponseIndicator(parsedJson);
+    const data = this.#serializerService.deserialize(parsedJson);
+    const error = this.#options.getError(parsedJson);
 
     this.#signalListenersService.ping(indicator, data, error);
   }

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { SignalIndicator } from '../../services/WebSocket/typedef';
 import { Controls, LazyControls, State } from './typedef';
+import { SignalIndicator } from '../../services/WebSocket/typedef';
 import { useWebSocketContext } from '../../contexts/WebSocket';
 
 
@@ -19,6 +19,7 @@ export const useSubscription = <
   const { addSignalListener } = useWebSocketContext<unknown, Res, Err>();
 
   const removeListener = useRef<(() => void) | null>(null);
+
   const [state, setState] = useState<State<Res, Err>>(initialState);
 
   useEffect(() => {
@@ -45,6 +46,7 @@ export const useLazySubscription = <
   const { addSignalListener } = useWebSocketContext<unknown, Res, Err>();
 
   const removeListener = useRef<(() => void) | null>(null);
+
   const [state, setState] = useState<State<Res, Err>>(initialState);
 
   useEffect(() => () => {
