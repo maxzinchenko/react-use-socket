@@ -1,11 +1,10 @@
 import { CachedPayload, Options } from './typedef';
 import { SignalIndicator } from '../WebSocket/typedef';
-import { SerializerService } from '../Serializer';
 import { LoggerService } from '../Logger';
 import { StorageService } from '../Storage';
 
 
-export class CacheService<Req, Res> {
+export class CacheService<Res> {
   readonly #expiresIn?: number;
 
   readonly #loggerService?: LoggerService;
@@ -23,40 +22,35 @@ export class CacheService<Req, Res> {
 
   static isSupported = StorageService.isSupported;
 
-  set = (signal: SignalIndicator, req: Req, res: Res) => {
-    const query = this.#prepareQuery(req);
+  set = (signal: SignalIndicator, res: Res) => {
     const payload = this.#createPayload(res);
 
-    this.#storageService.set(query, payload);
-    this.#loggerService?.log(`Cached data has updated for "${signal}"`, res)
+    this.#storageService.set(signal, payload, () => {
+      this.#loggerService?.log(`Updated the cache of "${signal}"`, res)
+    });
   }
 
-  get = (signal: SignalIndicator, req: Req): Res | null => {  
-    const query = this.#prepareQuery(req);
-    const payload = this.#storageService.get(query);
+  get = (signal: SignalIndicator): Res | null => {
+    const payload = this.#storageService.get(signal);
     if (!payload) return null;
 
-    if (payload.expirationDate && payload.expirationDate < Date.now()) {
-      this.#storageService.remove(query);
-      this.#loggerService?.log(`Cached data for "${signal}" found but it's expired. Removing`, req);
+    const { expirationDate, data } = payload;
+
+    if (expirationDate && expirationDate < Date.now()) {
+      this.remove(signal, true);
 
       return null;
     }
 
-    this.#loggerService?.log(`The data for "${signal}" is taken from cache`, req);
+    this.#loggerService?.log(`Used the cache of "${signal}"`, data);
 
-    return payload.data;
+    return data;
   }
 
-  remove = (signal: SignalIndicator, req: Req) => {
-    const query = this.#prepareQuery(req);
-
-    this.#storageService.remove(query);
-    this.#loggerService?.log(`Cached data has removed for "${signal}"`, req)
-  }
-
-  #prepareQuery = (req: Req) => {
-    return SerializerService.serializeJSON(req);
+  remove = (signal: SignalIndicator, exired?: boolean) => {
+    this.#storageService.remove(signal, () => {
+      this.#loggerService?.log(`Removed the cache of "${signal}"${exired ? ' (expired)' : ''}`);
+    });
   }
 
   #createPayload = (res: Res) => {

@@ -1,4 +1,9 @@
+import { SignalIndicator } from '../WebSocket/typedef';
+
+
 export type State<T> = {
-  [query: string]: T;
+  [query in SignalIndicator]: T;
 };
+
+export type Callback = () => void;
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { WebSocketProvider, WebSocketOptions, useWebSocketState, useSignal, useLazySignal, useSubscription, useLazySubscription } from 'react-use-socket';
+import { WebSocketProvider, WebSocketOptions, useWebSocketState, useSignal, useLazySignal, useSubscription, useLazySubscription } from './pkg';
 
 type Req = {
   method: string
@@ -45,7 +45,7 @@ const WebSocketState = () => {
 }
 
 const Signal = () => {
-  const data = useSignal<Req, DeserializedRes>({ method: 'get_data', data: { some: 'some' } });
+  const data = useSignal<Req, DeserializedRes>({ method: 'get_data', data: { some: 'some' } }, {  cache: true });
   const dataWithError = useSignal<Req, DeserializedRes>({ method: 'get_user', data: { some: 'some', error: 'something went wrong' } });
 
   return (
@@ -63,8 +63,8 @@ const Signal = () => {
 
 const LazySignal = () => {
   const [connected] = useWebSocketState();
-  const [data, { send }] = useLazySignal<Req, DeserializedRes>();
-  const [dataWithError, { send: sendWithError }] = useLazySignal<Req, DeserializedRes>();
+  const [data, { send }] = useLazySignal<Req, DeserializedRes>({ cache: true });
+  const [dataWithError, { send: sendWithError }] = useLazySignal<Req, DeserializedRes>({ cache: true });
 
   const handleSendClick = () => {
     if (!connected) return;

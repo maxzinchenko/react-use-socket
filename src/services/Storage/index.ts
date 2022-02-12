@@ -1,5 +1,6 @@
-import { SerializerService } from '../../services/Serializer';
-import { State } from './typedef';
+import { Callback, State } from './typedef';
+import { SignalIndicator } from '../WebSocket/typedef';
+import { SerializerService } from '../Serializer';
 
 
 const NAME = 'react-use-socket';
@@ -21,25 +22,29 @@ export class StorageService<T> {
     return Boolean(persist ? localStorage : sessionStorage);
   }
 
-  get = (query: string): T | null => {
+  get = (signal: SignalIndicator): T | null => {
     if (!this.#state) return null;
 
-    return this.#state[query];
+    return this.#state[signal];
   };
 
-  set = (query: string, payload: T) => {
+  set = (query: SignalIndicator, payload: T, callback?: Callback) => {
     const comparedPayload = this.#comparePayload(this.#state?.[query], payload);
     const newState = { ...this.#state, [query]: comparedPayload };
 
     this.#saveState(newState);
+
+    callback?.();
   };
 
-  remove = (query: string) => {
+  remove = (signal: SignalIndicator, callback?: Callback) => {
     if (!this.#state) return;
 
-    const { [query]: removedQuery, ...newState } = this.#state;
-
+    const { [signal]: removedSignal, ...newState } = this.#state;
+    console.log(newState);
     this.#saveState(newState);
+
+    callback?.();
   };
 
   wipe = () => {
