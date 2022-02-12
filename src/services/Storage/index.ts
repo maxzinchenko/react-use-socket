@@ -41,7 +41,6 @@ export class StorageService<T> {
     if (!this.#state) return;
 
     const { [signal]: removedSignal, ...newState } = this.#state;
-    console.log(newState);
     this.#saveState(newState);
 
     callback?.();

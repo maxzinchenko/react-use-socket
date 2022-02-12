@@ -1,4 +1,4 @@
-import { CachedPayload, Options } from './typedef';
+import { CachedPayload, InstanceOptions, Options } from './typedef';
 import { SignalIndicator } from '../WebSocket/typedef';
 import { LoggerService } from '../Logger';
 import { StorageService } from '../Storage';
@@ -22,11 +22,13 @@ export class CacheService<Res> {
 
   static isSupported = StorageService.isSupported;
 
-  set = (signal: SignalIndicator, res: Res) => {
+  set = (signal: SignalIndicator, res?: Res | null) => {
+    if (!res) return this.remove(signal);
+
     const payload = this.#createPayload(res);
 
     this.#storageService.set(signal, payload, () => {
-      this.#loggerService?.log(`Updated the cache of "${signal}"`, res)
+      this.#loggerService?.log(`Updated the cache of "${signal}"`, res);
     });
   }
 
@@ -35,12 +37,7 @@ export class CacheService<Res> {
     if (!payload) return null;
 
     const { expirationDate, data } = payload;
-
-    if (expirationDate && expirationDate < Date.now()) {
-      this.remove(signal, true);
-
-      return null;
-    }
+    if (expirationDate && expirationDate < Date.now()) return this.remove(signal, true);
 
     this.#loggerService?.log(`Used the cache of "${signal}"`, data);
 
@@ -51,9 +48,18 @@ export class CacheService<Res> {
     this.#storageService.remove(signal, () => {
       this.#loggerService?.log(`Removed the cache of "${signal}"${exired ? ' (expired)' : ''}`);
     });
+
+    return null;
   }
 
   #createPayload = (res: Res) => {
     return { data: res, ...(this.#expiresIn ? { expirationDate: Date.now() + this.#expiresIn } : {}) };
   }
 }
+
+
+export const createCacheInstance = <Res>(options?: InstanceOptions, debug?: boolean) => {
+  if (!options?.cache || !CacheService.isSupported(options.persist)) return;
+
+  return new CacheService<Res>({ ...options, debug });
+};

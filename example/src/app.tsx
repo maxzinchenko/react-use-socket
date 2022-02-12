@@ -1,5 +1,5 @@
 import React from 'react';
-import { WebSocketProvider, WebSocketOptions, useWebSocketState, useSignal, useLazySignal, useSubscription, useLazySubscription } from './pkg';
+import { WebSocketProvider, WebSocketOptions, useWebSocketState, useSignal, useLazySignal, useSubscription, useLazySubscription } from 'react-use-socket';
 
 type Req = {
   method: string
@@ -45,7 +45,7 @@ const WebSocketState = () => {
 }
 
 const Signal = () => {
-  const data = useSignal<Req, DeserializedRes>({ method: 'get_data', data: { some: 'some' } }, {  cache: true });
+  const data = useSignal<Req, DeserializedRes>({ method: 'get_data', data: { some: 'some' } });
   const dataWithError = useSignal<Req, DeserializedRes>({ method: 'get_user', data: { some: 'some', error: 'something went wrong' } });
 
   return (
@@ -63,8 +63,8 @@ const Signal = () => {
 
 const LazySignal = () => {
   const [connected] = useWebSocketState();
-  const [data, { send }] = useLazySignal<Req, DeserializedRes>({ cache: true });
-  const [dataWithError, { send: sendWithError }] = useLazySignal<Req, DeserializedRes>({ cache: true });
+  const [data, { send }] = useLazySignal<Req, DeserializedRes>();
+  const [dataWithError, { send: sendWithError }] = useLazySignal<Req, DeserializedRes>();
 
   const handleSendClick = () => {
     if (!connected) return;
@@ -75,7 +75,7 @@ const LazySignal = () => {
   const handleSendWithErrorClick = () => {
     if (!connected) return;
 
-    sendWithError({ method: 'get_user', data: { some: 'some', error: 'something went wrong' } });
+    sendWithError({ method: 'get_data', data: { some: 'some', error: 'something went wrong' } });
   }
 
   return (

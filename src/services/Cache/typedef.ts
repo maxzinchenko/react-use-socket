@@ -8,3 +8,7 @@ export type CachedPayload<D> = {
   data: D;
   expirationDate?: number;
 };
+
+export type InstanceOptions = Options & {
+  cache?: boolean;
+};
