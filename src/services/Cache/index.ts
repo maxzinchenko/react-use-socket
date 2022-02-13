@@ -10,13 +10,13 @@ export class CacheService<Res> {
   readonly #loggerService?: LoggerService;
   readonly #storageService: StorageService<CachedPayload<Res>>;
 
-  constructor(options?: Options) {
+  constructor(name: string, options?: Options) {
     this.#expiresIn = options?.expiresIn;
 
     this.#storageService = new StorageService(options?.persist);
 
     if (options?.debug) {
-      this.#loggerService = new LoggerService();
+      this.#loggerService = new LoggerService(name);
     }
   }
 
@@ -58,8 +58,8 @@ export class CacheService<Res> {
 }
 
 
-export const createCacheInstance = <Res>(options?: InstanceOptions, debug?: boolean) => {
+export const createCacheInstance = <Res>(name: string, options?: InstanceOptions, debug?: boolean) => {
   if (!options?.cache || !CacheService.isSupported(options.persist)) return;
 
-  return new CacheService<Res>({ ...options, debug });
+  return new CacheService<Res>(name, { ...options, debug });
 };

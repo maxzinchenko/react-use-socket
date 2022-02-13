@@ -1,6 +1,7 @@
-import { RandomService } from '../Random';
-import { SignalIndicator } from '../WebSocket/typedef';
 import { SignalListenerData, SignalListener } from './typedef';
+import { SignalIndicator } from '../WebSocket/typedef';
+import { DebugMeta } from '../Logger/typedef';
+import { RandomService } from '../Random';
 import { LoggerService } from '../Logger';
 
 
@@ -10,11 +11,11 @@ export class SignalListenersService<Res, Err> {
 
   #listeners: SignalListenerData<Res, Err>[] = []
 
-  constructor(debug?: boolean) {
+  constructor({ debug, prefix }: DebugMeta) {
     this.#randomService = new RandomService();
 
     if (debug) {
-      this.#loggerService = new LoggerService();
+      this.#loggerService = new LoggerService(prefix);
     }
   }
 

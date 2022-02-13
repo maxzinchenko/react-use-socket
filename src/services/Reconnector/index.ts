@@ -1,3 +1,4 @@
+import { DebugMeta } from '../Logger/typedef';
 import { LoggerService } from '../Logger';
 
 
@@ -10,12 +11,12 @@ export class ReconnectorService {
   #reconnections = 0;
   #timeout: NodeJS.Timeout | null = null;
 
-  constructor(callback: () => void, interval: number | number[] = 1000, debug?: boolean) {
+  constructor(callback: () => void, interval: number | number[] = 1000, { debug, prefix }: DebugMeta) {
     this.#interval = interval;
     this.#callback = callback;
 
     if (debug) {
-      this.#loggerService = new LoggerService();
+      this.#loggerService = new LoggerService(prefix);
     }
   }
 

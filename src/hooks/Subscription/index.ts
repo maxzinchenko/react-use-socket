@@ -1,9 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { Controls, LazyControls, Options, State } from './typedef';
+import { Controls, LazyControls, State, Options } from './typedef';
 import { SignalIndicator } from '../../services/WebSocket/typedef';
 import { useWebSocketContext } from '../../contexts/WebSocket';
-import { createCacheInstance } from '../../services/Cache';
 
 
 const initialState = {
@@ -14,26 +13,19 @@ const initialState = {
 
 export const useSubscription = <
   Res,
+  N extends string = string,
   Err = string,
   Signal extends SignalIndicator = SignalIndicator
->(signal: Signal, options?: Options): [State<Res, Err>, Controls] => {
-  const { addSignalListener, debug } = useWebSocketContext<unknown, Res, Err>();
+>(signal: Signal, options?: Options<N>): [State<Res, Err>, Controls] => {
+  const { addSignalListener } = useWebSocketContext<unknown, Res, N, Err>(options?.name);
 
-  const cache = useRef(createCacheInstance<Res>(options, debug)).current;
   const removeListener = useRef<(() => void) | null>(null);
 
   const [state, setState] = useState<State<Res, Err>>(initialState);
 
   useEffect(() => {
-    const cachedData = cache?.get(signal);
-
-    if (cachedData) {
-      setState(prevState => ({ ...prevState, mounted: true, data: cachedData }));
-    }
-
     removeListener.current = addSignalListener(signal, (error, response) => {
       setState({ error, data: response });
-      cache?.set(signal, error ? null : response);
     });
 
     return removeListener.current;
@@ -49,12 +41,12 @@ export const useSubscription = <
 
 export const useLazySubscription = <
   Res,
+  N extends string = string,
   Err = string,
   Signal extends SignalIndicator = SignalIndicator
-  >(signal: Signal, options?: Options): [State<Res, Err>, LazyControls] => {
-  const { addSignalListener, debug } = useWebSocketContext<unknown, Res, Err>();
+  >(signal: Signal, options?: Options<N>): [State<Res, Err>, LazyControls] => {
+  const { addSignalListener } = useWebSocketContext<unknown, Res, N, Err>(options?.name);
 
-  const cache = useRef(createCacheInstance<Res>(options, debug)).current;
   const removeListener = useRef<(() => void) | null>(null);
 
   const [state, setState] = useState<State<Res, Err>>(initialState);
@@ -64,15 +56,8 @@ export const useLazySubscription = <
   }, []);
 
   const start = useCallback(() => {
-    const cachedData = cache?.get(signal);
-
-    if (cachedData) {
-      setState(prevState => ({ ...prevState, mounted: true, data: cachedData }));
-    }
-
     removeListener.current = addSignalListener(signal, (error, response) => {
       setState({ error, data: response });
-      cache?.set(signal, error ? null : response);
     });
   }, []);
 
