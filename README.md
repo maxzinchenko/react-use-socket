@@ -18,12 +18,6 @@ The package is built over the <a href="https://developer.mozilla.org/en-US/docs/
 ---
 
 
-`0.1.1` - stable release
-
-
----
-
-
 ## Structure
 
 - [Installation](#installation)
