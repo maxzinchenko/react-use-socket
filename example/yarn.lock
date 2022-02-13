@@ -986,7 +986,7 @@
     "@babel/types" "^7.4.4"
     esutils "^2.0.2"
 
-"@babel/preset-react@7.16.7", "@babel/preset-react@^7.12.5", "@babel/preset-react@^7.16.0":
+"@babel/preset-react@^7.12.5", "@babel/preset-react@^7.16.0":
   version "7.16.7"
   resolved "https://registry.yarnpkg.com/@babel/preset-react/-/preset-react-7.16.7.tgz#4c18150491edc69c183ff818f9f2aecbe5d93852"
   integrity sha512-fWpyI8UM/HE6DfPBzD8LnhQ/OcH8AgTaqcqP2nGOXEUV+VKBR5JRN9hCk9ai+zQQ57vtm9oWeXguBCPNUjytgA==
@@ -7040,10 +7040,10 @@ react-scripts@5.0.0:
   optionalDependencies:
     fsevents "^2.3.2"
 
-react-use-socket@0.1.0:
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/react-use-socket/-/react-use-socket-0.1.0.tgz#0714046b5ba29d6869bc2959fff41c7338e8fa9f"
-  integrity sha512-23yKGWxLYzBXlG/U8sjCRdzPgATACGfwYCBULwQPob59YqO1obOiY5rEFUG8vKF7XBUjzoRsU1UOAffUmpIWgA==
+react-use-socket@0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/react-use-socket/-/react-use-socket-0.1.1.tgz#6fb702f245d67577d4b638c974f128983a434fb6"
+  integrity sha512-01G7SuKzuYdwbyAKpa4JM4NEMqc882nMmlXIbzkKE5OcbMceKX53L9E5W8T8VFDOGdpFz/CZe77WXO1CUuaZ3A==
   dependencies:
     react-router-dom "6.2.1"
 
