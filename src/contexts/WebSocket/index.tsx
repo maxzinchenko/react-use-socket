@@ -17,7 +17,7 @@ export const WebSocketProvider = <
 >({ options, children }: ProviderProps<Req, Res, N, Err, SReq, DRes>) => {
   const [connected, setConnected] = useState<ConnectedState<N> | {}>({});
 
-  const optionsEntries = useMemo((): [N, Options<Req, Res, N, Err, SReq, DRes>][] => {
+  const optionsEntries = useMemo((): [N, Options<Req, Res, Err, SReq, DRes>][] => {
     return Object.entries(options) as any[];
   }, [options]);
 

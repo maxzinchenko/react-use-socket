@@ -18,17 +18,11 @@ The package is built over the <a href="https://developer.mozilla.org/en-US/docs/
 ---
 
 
-`0.1.0` - stable release
-
-
----
-
-
 ## Structure
 
 - [Installation](#installation)
 - [One socket example](https://github.com/maxzinchenko/react-use-socket/blob/master/example/src/one-socket.tsx)
-- [Many sockets example](https://github.com/maxzinchenko/react-use-socket/blob/master/example/src/many-sockets.tsx)
+- [Multiple sockets example](https://github.com/maxzinchenko/react-use-socket/blob/master/example/src/many-sockets.tsx)
 - [Provider options](#provider-options)
   - [url](#url)
   - [getRequestIndicator](#getRequestIndicator)

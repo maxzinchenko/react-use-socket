@@ -68,7 +68,7 @@ const Signal = () => {
 }
 
 const LazySignal = () => {
-  const [connected] = useWebSocketState<Socket>(Socket.MAIN);
+  const [connected] = useWebSocketState<Socket>({ name: Socket.MAIN });
   const [data, { send }] = useLazySignal<Req, DeserializedRes>();
   const [dataWithError, { send: sendWithError }] = useLazySignal<Req, DeserializedRes>();
 
