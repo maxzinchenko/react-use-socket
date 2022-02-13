@@ -1,6 +1,10 @@
 # Changelog
 
-## 0.1.0
+## 0.1.1
+
+- Fixed react babel error.
+
+## 0.1.0 
 
 - Added multiply sockets support.
 - Changed `ProviderOptions` type.
