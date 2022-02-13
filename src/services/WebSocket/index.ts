@@ -20,7 +20,8 @@ export class WebSocketService<Req, Res, Err, SReq = Req, DRes = Res> {
   #ws: WebSocket | null = null;
 
   constructor(options: Options<Req, Res, Err, SReq, DRes>, openCallback?: OpenCallback, closeCallback?: CloseCallback) {
-    const { shouldReconnect, reconnectionInterval, serialize, deserialize, debug, ...restOptions } = options;
+    const { shouldReconnect, reconnectionInterval, serialize, deserialize, debug, name, ...restOptions } = options;
+    const debugMeta = { debug, prefix: `${name}:${restOptions.url}` };
 
     this.#options = restOptions;
     this.#shouldReconnect = shouldReconnect ?? true;
@@ -29,11 +30,11 @@ export class WebSocketService<Req, Res, Err, SReq = Req, DRes = Res> {
     this.#closeCallback = closeCallback;
 
     this.#serializerService = new SerializerService(serialize, deserialize);
-    this.#signalListenersService = new SignalListenersService(debug);
-    this.#reconnectorService = new ReconnectorService(this.open, reconnectionInterval, debug);
+    this.#signalListenersService = new SignalListenersService(debugMeta);
+    this.#reconnectorService = new ReconnectorService(this.open, reconnectionInterval, debugMeta);
 
     if (debug) {
-      this.#loggerService = new LoggerService();
+      this.#loggerService = new LoggerService(debugMeta.prefix);
       this.#loggerService.log('Debug mode is ON', this.#options);
     }
   }

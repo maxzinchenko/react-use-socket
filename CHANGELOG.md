@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.0
+
+- Added multiply sockets support.
+- Changed `ProviderOptions` type.
+
 ## 0.0.13
 
 - Added es modules.

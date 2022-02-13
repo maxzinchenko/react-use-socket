@@ -1,8 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { Controls, State, Options } from './typedef';
+import { Controls, Options, State } from './typedef';
 import { SignalIndicator } from '../../services/WebSocket/typedef';
-import { createCacheInstance } from '../../services/Cache';
 import { useWebSocketContext } from '../../contexts/WebSocket';
 
 
@@ -14,11 +13,15 @@ const initialState = {
 };
 
 
-export const useSignal = <Req, Res, Err = string>(req: Req, options?: Options) => {
-  const { send, addSignalListener, getRequestIndicator, connected, debug } = useWebSocketContext<Req, Res, Err>();
+export const useSignal = <
+  Req,
+  Res,
+  N extends string = string,
+  Err = string
+>(req: Req, options?: Options<N>) => {
+  const { send, addSignalListener, getRequestIndicator, connected } = useWebSocketContext<Req, Res, N, Err>(options?.name);
 
   const signal = useRef(getRequestIndicator(req)).current;
-  const cache = useRef(createCacheInstance<Res>(options, debug)).current;
   const removeListener = useRef<(() => void) | null>(null);
 
   const [state, setState] = useState<State<Res, Err>>(initialState);
@@ -32,19 +35,14 @@ export const useSignal = <Req, Res, Err = string>(req: Req, options?: Options) =
   }, [req, connected, state.mounted]);
 
   useEffect(() => {
-    const cachedData = cache?.get(signal);
+    if (!connected) return;
 
-    if (cachedData) {
-      setState(prevState => ({ ...prevState, mounted: true, data: cachedData }));
-    } else {
-      sendRequest();
-    }
+    sendRequest();
   }, [connected]);
 
   useEffect(() => {
     removeListener.current = addSignalListener(signal, (error, response) => {
       setState(prevState => ({ ...prevState, error, loading: false, data: response }));
-      cache?.set(signal, error ? null : response);
     });
 
     return removeListener.current;
@@ -54,26 +52,25 @@ export const useSignal = <Req, Res, Err = string>(req: Req, options?: Options) =
 };
 
 
-export const useLazySignal = <Req, Res, Err = string>(options?: Options): [State<Res, Err>, Controls<Req>] => {
-  const { send, addSignalListener, getRequestIndicator, debug } = useWebSocketContext<Req, Res, Err>();
+export const useLazySignal = <
+  Req,
+  Res,
+  N extends string = string,
+  Err = string
+>(options?: Options<N>): [State<Res, Err>, Controls<Req>] => {
+  const { send, addSignalListener, getRequestIndicator } = useWebSocketContext<Req, Res, N, Err>(options?.name);
 
   const signal = useRef<SignalIndicator | null>(null);
-  const cache = useRef(createCacheInstance<Res>(options, debug)).current;
   const removeListener = useRef<(() => void) | null>(null);
 
   const [state, setState] = useState<State<Res, Err>>(initialState);
 
   const sendRequest = useCallback((req: Req) => {
     signal.current = getRequestIndicator(req);
-    const cachedData = cache?.get(signal.current);
 
-    if (cachedData && !state.mounted) {
-      setState(prevState => ({ ...prevState, mounted: true, data: cachedData }));
-    } else {
-      setState(prevState => ({ ...prevState, mounted: true, loading: true, error: null }));
+    setState(prevState => ({ ...prevState, mounted: true, loading: true, error: null }));
 
-      send(req);
-    }
+    send(req);
   }, [state.mounted]);
 
   useEffect(() => {
@@ -81,7 +78,6 @@ export const useLazySignal = <Req, Res, Err = string>(options?: Options): [State
 
     removeListener.current = addSignalListener(signal.current, (error, response) => {
       setState(prevState => ({ ...prevState, loading: false, data: response, error }));
-      cache?.set(signal.current!, error ? null : response);
     });
   }, [!signal.current]);
 

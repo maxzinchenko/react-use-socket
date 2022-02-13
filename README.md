@@ -18,7 +18,7 @@ The package is built over the <a href="https://developer.mozilla.org/en-US/docs/
 ---
 
 
-`0.0.13` - stable release
+`0.1.0` - stable release
 
 
 ---
@@ -27,7 +27,8 @@ The package is built over the <a href="https://developer.mozilla.org/en-US/docs/
 ## Structure
 
 - [Installation](#installation)
-- [Example](https://github.com/maxzinchenko/react-use-socket/blob/master/example/src/app.tsx)
+- [One socket example](https://github.com/maxzinchenko/react-use-socket/blob/master/example/src/one-socket.tsx)
+- [Many sockets example](https://github.com/maxzinchenko/react-use-socket/blob/master/example/src/many-sockets.tsx)
 - [Provider options](#provider-options)
   - [url](#url)
   - [getRequestIndicator](#getRequestIndicator)
@@ -294,6 +295,10 @@ deserialize: res => {
 ## Custom Error Type
 
 ```ts
+enum Socket {
+  MAIN = 'Main'
+}
+
 type Req = {
   get_user: {
     id: number
@@ -320,19 +325,19 @@ type Error = {
 Putting these types into a generic hook:
 
 ```ts
-const signalData = useSignal<Req, Res, Error>({...})
+const signalData = useSignal<Req, Res, Socket, Error>({...})
 ```
 
 ```ts
-const [signalData, signalControls] = useLazySignal<Req, Res, Error>()
+const [signalData, signalControls] = useLazySignal<Req, Res, Socket, Error>()
 ```
 
 ```ts
-const [subscriptionData, subscriptionControls] = useSubscription<Req, Res, Error>('')
+const [subscriptionData, subscriptionControls] = useSubscription<DRes, Socket, Error>('')
 ```
 
 ```ts
-const [subscriptionData, subscriptionControls] = useLazySubscription<Req, Res, Error>('')
+const [subscriptionData, subscriptionControls] = useLazySubscription<DRes, Socket, Error>('')
 ```
 
 
@@ -342,6 +347,8 @@ const [subscriptionData, subscriptionControls] = useLazySubscription<Req, Res, E
 ## Hooks usage
 
 ### useWebSocketState
+
+When you use only <b>one socket</b>, passing the socket name is optional.
 
 ```tsx
 import React from 'react';
@@ -361,7 +368,34 @@ const Component = () => {
 };
 ```
 
+When you use <b>multiple sockets</b>, passing the socket name is required. Otherwise, you get the
+`The "name" is required for the hook usage` error.
+
+```tsx
+import React from 'react';
+import { useWebSocketState } from 'react-awesome-websocket';
+
+enum Socket {
+  MAIN = 'Main'
+}
+
+const Component = () => {
+  const [connected, { open, close }] = useWebSocketState<Socket>({ name: Socket.MAIN });
+
+  return (
+    <>
+      <h1>useWebSocketState example</h1>
+      <h2>Connected: {connected}</h2>
+      <button onClick={open} disabled={connected}>Open</button>
+      <button onClick={close} disabled={!connected}>Close</button>
+    <>
+  );
+};
+```
+
 ### useSignal
+
+When you use only <b>one socket</b>, passing the socket name is optional.
 
 ```tsx
 import React from 'react';
@@ -398,7 +432,52 @@ const Component = () => {
 };
 ```
 
+When you use <b>multiple sockets</b>, passing the socket name is required. Otherwise, you get the
+`The "name" is required for the hook usage` error.
+
+```tsx
+import React from 'react';
+import { useSignal } from 'react-awesome-websocket';
+
+enum Socket {
+  MAIN = 'Main'
+}
+
+type Req = {
+  get_user: {
+    id: number
+  }
+}
+
+type Res = {
+  get_user: {
+    username: string
+    avatarUrl: string
+  }
+}
+
+const Component = () => {
+  const { loading, error, data, mounted } = useSignal<Req, Res, Socket>({
+    get_user: { id: 1 }
+  }, { name: Socket.MAIN });
+
+  return (
+    <>
+      <h1>useSignal example</h1>
+      <h2>Loading: {loading}</h2>
+      <h2>Error: {error}</h2>
+      <h2>Mounted: {mounted}</h2>
+      <h2>Data:</h2>
+      <pre>{JSON.stringify(data, null, 4)}</pre>
+    <>
+  );
+};
+```
+
+
 ### useLazySignal
+
+When you use only <b>one socket</b>, passing the socket name is optional.
 
 ```tsx
 import React from 'react';
@@ -443,7 +522,60 @@ const Component = () => {
 };
 ```
 
+When you use <b>multiple sockets</b>, passing the socket name is required. Otherwise, you get the
+`The "name" is required for the hook usage` error.
+
+```tsx
+import React from 'react';
+import { useLazySignal } from 'react-awesome-websocket';
+
+enum Socket {
+  MAIN = 'Main'
+}
+
+type Req = {
+  get_user: {
+    id: number
+  }
+}
+
+type DRes = {
+  get_user: {
+    username: string
+    avatarUrl: string
+  }
+}
+
+const Component = () => {
+  const [signalData, { send }] = useLazySignal<Req, DRes, Socket>({
+    get_user: { id: 1 }
+  }, { name: Socket.MAIN });
+
+  const { loading, error, data, mounted } = signalData;
+  
+  const handleSendClick = () => {
+    send({ get_user: { id: 1 } });
+  }
+
+  return (
+    <>
+      <h1>useLazySignal example</h1>
+      <button onClick={handleSendClick}>Send Request</button>
+      <h2>Loading: {loading}</h2>
+      <h2>Error:</h2>
+      <pre>{JSON.stringify(error, null, 4)}</pre>
+      <h2>Mounted: {mounted}</h2>
+      <h2>Data:</h2>
+      <pre>{JSON.stringify(data, null, 4)}</pre>
+    <>
+  );
+};
+```
+
+
 ### useSubscription
+
+When you use only <b>one socket</b>, passing the socket name is optional.
 
 ```tsx
 import React from 'react';
@@ -471,7 +603,43 @@ const Component = () => {
 };
 ```
 
+When you use <b>multiple sockets</b>, passing the socket name is required. Otherwise, you get the
+`The "name" is required for the hook usage` error.
+
+```tsx
+import React from 'react';
+import { useSubscription } from 'react-awesome-websocket';
+
+enum Socket {
+  MAIN = 'Main'
+}
+
+type DRes = {
+  user_update: {
+    username: string
+    avatarUrl: string
+  }
+}
+
+const Component = () => {
+  const [{ data, error }, { stop }] = useSubscription<DRes, Socket>('user_update', {
+    name: Socket.MAIN
+  });
+  return (
+    <>
+      <h1>useSubscription example</h1>
+      <button onClick={stop}>Stop subscription</button>
+      <h2>Error: {error}</h2>
+      <h2>Data:</h2>
+      <pre>{JSON.stringify(data, null, 4)}</pre>
+    <>
+  );
+};
+```
+
 ### useLazySubscription
+
+When you use only <b>one socket</b>, passing the socket name is optional.
 
 ```tsx
 import React from 'react';
@@ -506,12 +674,58 @@ const Component = () => {
 };
 ```
 
+When you use <b>multiple sockets</b>, passing the socket name is required. Otherwise, you get the
+`The "name" is required for the hook usage` error.
+
+```tsx
+import React from 'react';
+import { useLazySubscription } from 'react-awesome-websocket';
+
+enum Socket {
+  MAIN = 'Main'
+}
+
+type Req = {
+  get_user: {
+    id: number
+  }
+}
+
+type DRes = {
+  get_user: {
+    username: string
+    avatarUrl: string
+  }
+}
+
+const Component = () => {
+  const [{ data, error }, { start, stop }] = useLazySubscription<DRes, Socket>('user_update', {
+    name: Socket.MAIN
+  });
+
+  return (
+    <>
+      <h1>useLazySubscription example</h1>
+      <button onClick={start}>Start subscription</button>
+      <button onClick={stop}>Stop subscription</button>
+      <h2>Error: {error}</h2>
+      <h2>Data:</h2>
+      <pre>{JSON.stringify(data, null, 4)}</pre>
+    <>
+  );
+};
+```
+
 ---
 
 ## Provider options declaration
 
 ```ts
 import { WebSocketOptions } from 'react-awesome-websocket';
+
+enum Scoket {
+  MAIN = 'Main'
+};
 
 type ScoketReq = {
   method: string
@@ -536,20 +750,23 @@ type SocketError = {
 const options: WebSocketOptions<
   ScoketReq,
   SocketRes,
+  Scoket,
   SocketError,
   ScoketSerializedReq,
   SocketDeserializedRes
 > = {
-  url: 'ws://localhost:3000',
-  getRequestIndicator: req => req.method,
-  getResponseIndicator: res => Object.keys(res)[0],
-  getError: res => res[Object.keys(res)[0]].error_msg || null,
+  [Socket.MAIN]: {
+    url: 'ws://localhost:3000',
+    getRequestIndicator: req => req.method,
+    getResponseIndicator: res => Object.keys(res)[0],
+    getError: res => res[Object.keys(res)[0]].error_msg || null,
 
-  // serialize: (req: ScoketReq) => ScoketSerializedReq
-  serialize: ({ method, data }) => ({ [method]: data }),
+    // serialize: (req: ScoketReq) => ScoketSerializedReq
+    serialize: ({ method, data }) => ({ [method]: data }),
 
-  // deserialize: (res: SocketRes) => SocketDeserializedRes
-  deserialize: (res: SocketRes) => res[Object.keys(res)[0]]
+    // deserialize: (res: SocketRes) => SocketDeserializedRes
+    deserialize: (res: SocketRes) => res[Object.keys(res)[0]]
+  }
 };
 ```
 
@@ -558,17 +775,20 @@ const options: WebSocketOptions<
 `WebSocketOptions` is a generic type.
 
 ```ts
-WebSocketOptions<Req, Res, Err = string, SReq = Req, DRes = Res>
+WebSocketOptions<Req, Res, N extends string = stirng, Err = string, SReq = Req, DRes = Res>
 ```
 
 `Req` - type of the socket request (required).
 
 `Res` - type of the socket response (required).
 
+`N` (default is `string`) - type of the sockets' names.<br/>
+**This type should be passed into every hook if you need to use multiple sockets.**
+
 `Err` (default is `string`) - type of the socket error which is reachable by using hooks as` error` (not required).
 
 `SReq` (default is `Req`) - type of serialized socket request which will be sent to the API (not required).<br>
-**This type should be returned from the WebSocketOptions.serialize function.**
+**This type should be returned from the `WebSocketOptions.serialize` function.**
 
 `DRes` (default is `Res`) - type of deserialized socket response which is reachable by using hooks as `data` (not required).<br>
-**This type should be returned from the WebSocketOptions.deserialize function.**
+**This type should be returned from the `WebSocketOptions.deserialize` function.**
