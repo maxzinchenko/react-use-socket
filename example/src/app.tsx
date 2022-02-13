@@ -75,7 +75,7 @@ const LazySignal = () => {
   const handleSendWithErrorClick = () => {
     if (!connected) return;
 
-    sendWithError({ method: 'get_user', data: { some: 'some', error: 'something went wrong' } });
+    sendWithError({ method: 'get_data', data: { some: 'some', error: 'something went wrong' } });
   }
 
   return (

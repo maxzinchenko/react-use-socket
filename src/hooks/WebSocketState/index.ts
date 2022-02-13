@@ -7,3 +7,9 @@ export const useWebSocketState = (): [boolean, Controls] => {
 
   return [connected, { open, close }];
 };
+
+export const useLazyWebSocketState = (): [boolean, Controls] => {
+  const { connected, open, close } = useWebSocketContext<unknown, unknown>();
+
+  return [connected, { open, close }];
+};
