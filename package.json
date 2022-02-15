@@ -1,6 +1,6 @@
 {
   "name": "react-use-socket",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "The package which makes web socket management much easier by using hooks",
   "author": {
     "name": "Max Zinchenko",
@@ -57,9 +57,7 @@
       "last 1 safari version"
     ]
   },
-  "dependencies": {
-    "react-router-dom": "6.2.1"
-  },
+  "dependencies": {},
   "peerDependencies": {
     "react": "^16.8.0 || ^17.0.0"
   },
